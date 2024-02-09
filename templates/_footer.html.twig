@@ -1,0 +1,10 @@
+
+        <div id="footer">
+            Простая PHP CMS &copy; 2017. Все права принадлежат всем. ;)
+            {% if app.user.username ?? false %}
+                <a href="{{ path('app_admin_articles') }}">Site Admin</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Site Admin</a>
+            {% endif %}
+
+        </div><!--'end_footer'-->

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle  ?? "Ошибка 404" }}{% endblock %}
+
+{% block body %}
+    {% if errorMessage ?? false %}
+
+        <h1 style="width: 75%;">[!] Произошла ОШИБКА</h1>
+
+        <div style="width: 75%; font-style: italic;">Текст ошибки:</div>
+        <div style="width: 75%;">{{ errorMessage|raw }}</div>
+
+        <p><a href="{{ path('app_homepage') }}">Вернуться на главную страницу</a></p>
+    {% endif %}
+{% endblock %}

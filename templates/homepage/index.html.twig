@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+
+        <h1>{{ pageHeading }}</h1>
+
+        <ul id="headlines">
+    {% for article in articles %}
+        <li class="{{ article.id }}">
+                <h2>
+                    <span class="pubDate">
+                        {{ article.publicationDate|date('j F') }}
+                    </span>
+
+                    <a href="{{ path('app_article', {'id': article.id}) }}">
+                        {{ article.title }}
+                    </a>
+
+                {% if categories[article.categoryId] ?? false %}
+                    <span class="category">
+                        in
+                        <a href="{{ path('app_category', {'id': article.categoryId}) }}">
+                            {{ categories[article.categoryId].name }}
+                        </a>
+                    </span>
+                {% elseif subcategories[article.subcategoryId] ?? false %}
+                    <span class="category">
+                        in
+                        <a href="{{ path('app_category', {'id': subcategories[article.subcategoryId].category.id}) }}">
+                            {{ subcategories[article.subcategoryId].category.name }}
+                        </a><!-- $results['subcategories'][$article->subcategoryId]->categoryId) -->
+                    </span>
+                {% else %}
+                    <span class="category">
+                        Без категории
+                    </span>
+                {% endif %}
+
+                {% if subcategories[article.subcategoryId] ?? false %}
+                    <span class="category">
+                        in
+                        <a href="{{ path('app_subcategory', {'id': article.subcategoryId}) }}">
+                            {{ subcategories[article.subcategoryId].subname }}
+                        </a>
+                    </span>
+                {% else %}
+                    <span class="category">
+                        Без подкатегории
+                    </span>
+                {% endif %}
+
+                {% if article.authors ?? false %}
+
+                    <span class="category">
+                        author{{ article.authors|length > 1 ? 's' : '' }}
+                        {{ article.authors|join(', ') }}
+                    </span>
+                {% endif %}
+
+                </h2>
+
+                <p class="summary">
+                    {{ article.content|length > 53 ? article.content[:50] ~ '...' : article.content }}
+                </p>
+                <img id="loader-identity-{{ article.id }}" class="loader-identity" src="{{ asset('js/ajax-loader.gif') }}" alt="gif">
+
+                <ul class="ajax-load">
+                    <li><a href="{{ path('app_article', {'id': article.id}) }}"
+                        class="ajaxByPost" data-articleId="{{ article.id }}">Показать продолжение (POST -- NEW)</a></li>
+                    <li><a href="{{ path('app_article', {'id': article.id}) }}"
+                        class="ajaxByGet" data-articleId="{{ article.id }}">Показать продолжение (GET -- NEW)</a></li>
+                </ul>
+
+                <a href="{{ path('app_article', {'id': article.id}) }}"
+                    class="showContent" data-contentId="{{ article.id }}">Показать полностью</a>
+            </li>
+
+    {% endfor %}
+    </ul><!--'end_headlines'-->
+
+        <p><a href="{{ path('app_archive') }}">Архив статей</a></p>
+{% endblock %}

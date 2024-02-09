@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+
+        <h1 style="width: 75%;">{{ pageHeading }}</h1>
+
+        <div style="width: 75%; font-style: italic;">{{ article.summary }}</div>
+        <div style="width: 75%;">{{ article.content }}</div>
+
+        <p class="pubDate">
+            Published on {{ article.publicationDate|date('j F Y') }}
+        {% if category ?? false %}
+
+            in category
+            <a href="{{ path('app_category', {'id': category.id}) }}">
+                {{ category.name }}
+            </a>
+        {% endif %}
+
+        {% if subcategory ?? false %}
+            in subcategory
+            <a href="{{ path('app_subcategory', {'id': subcategory.id}) }}">
+                {{ subcategory.subname }}
+            </a>
+        {% endif %}
+
+        {% if article.authors ?? false %}
+
+            <span style="font-size: 80%;" class="category">
+                author{{ article.authors|length > 1 ? 's' : '' }}
+                {{ article.authors|join(', ') }}
+            </span>
+        {% endif %}
+
+        </p>
+
+        <p><a href="{{ path('app_homepage') }}">Вернуться на главную страницу</a></p>
+{% endblock %}

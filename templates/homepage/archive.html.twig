@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }}{% endblock %}
+
+{% block body %}
+
+        <h1>{{ pageHeading }}</h1>
+        {% if description ?? false %}
+        <h3 class="categoryDescription">{{ description }}</h3>
+        {% endif %}
+
+        <ul id="headlines" class="archive">
+    {% for article in articles %}
+        <li>
+                <h2>
+                    <span class="pubDate">
+                        {{ article.publicationDate|date('j F Y') }}
+                    </span>
+
+                    <a href="{{ path('app_article', {'id': article.id}) }}">
+                        {{ article.title }}
+                    </a>
+
+                {% if article.categoryId ?? false %}
+                    <span class="category">
+                        in category
+                        <a href="{{ path('app_category', {'id': article.categoryId}) }}">
+                            {{ categories[article.categoryId].name }}
+                        </a>
+                    </span>
+                {% endif %}
+
+                {% if article.subcategoryId ?? false %}
+                    <span class="category">
+                        in category
+                        <a href="{{ path('app_category', {'id': subcategories[article.subcategoryId].category.id}) }}">
+                            {{ subcategories[article.subcategoryId].category.name }}
+                        </a>
+                    </span>
+                    <span class="category">
+                        in subcategory
+                        <a href="{{ path('app_subcategory', {'id': article.subcategoryId}) }}">
+                            {{ subcategories[article.subcategoryId].subname }}
+                        </a>
+                    </span>
+                {% endif %}
+
+                {% if article.authors ?? false %}
+
+                    <span class="category">
+                        author{{ article.authors|length > 1 ? 's' : '' }}
+                        {{ article.authors|join(', ') }}
+                    </span>
+                {% endif %}
+
+                </h2>
+
+                <p class="summary">{{ article.summary }}</p>
+            </li> 
+
+    {% endfor %}
+    </ul><!--'end_headlines'-->
+
+        <p>{{ articles|length }} article{{ articles|length > 1 ? 's' }} in total.</p>
+        <p><a href="{{ path('app_homepage') }}">Return to Homepage</a></p>
+{% endblock %}

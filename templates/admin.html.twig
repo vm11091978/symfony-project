@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+{% endblock %}
+
+{% block adminpanel %}
+    {{ include('_nav_admin.html.twig') }}
+{% endblock %}
+
+{% block footer %}
+    {{ include('_footer_admin.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript" src="{{ asset('js/jquery-3.2.1.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/popper.js') }}"></script>
+{% endblock %}
