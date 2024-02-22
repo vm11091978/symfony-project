@@ -26,7 +26,7 @@ $ php bin/console doctrine:migrations:migrate
 
 
 Все CRUD-контроллеры создал с помощью серии команд (автоматически были созданы ещё формы и шаблоны):
-```php
+```bash
 php bin/console make:crud Article
 php bin/console make:crud Category
 php bin/console make:crud Subcategory
@@ -34,7 +34,9 @@ php bin/console make:crud User
 ```
 
 Чтобы можно было войти в приложение как администратор, назначил хешированный пароль админу и изменил его роль на ROLE_ADMIN:
+```php
 UPDATE users SET password = '$2y$13$J/cM9DpoYfW0aHJhkla3ku7nY2etA3WBOghgnhDALT9dxNKL7iaiG', role = 'ROLE_ADMIN' WHERE id = 1;
+```
 Данные для входа в админку:
 логин: admin
 пароль: admin
