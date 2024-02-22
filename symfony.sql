@@ -18,7 +18,7 @@ INSERT INTO subcategories (id, category_id, subname) VALUES
 (3, 2, 'ещё подкатегория');
 
 INSERT INTO users (id, login, password, email, role, active) VALUES
-(1, 'admin', 'admin', 'admin@admin.admin', 'admin', true),
+(1, 'admin', '$2y$13$J/cM9DpoYfW0aHJhkla3ku7nY2etA3WBOghgnhDALT9dxNKL7iaiG', 'admin@admin.admin', 'ROLE_ADMIN', true),
 (2, 'Mery', '1234', 'email@rrt', 'auth_user', false),
 (3, 'Вова', '1234', 'email@ya.ru', 'auth_user', true);
 

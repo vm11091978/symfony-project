@@ -1,0 +1,81 @@
+{{ form_start(form) }}
+<div class="py-5 pr-5 bg-light border border-secondary rounded shadow">
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.title, 'Article Title') }}</div>
+        <div class="col">{{ form_widget(form.title,
+            {'attr': {'class': 'form-control', 'placeholder': 'Name of the article'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.summary, 'Article Summary') }}</div>
+        <div class="col">{{ form_widget(form.summary,
+            {'attr': {'class': 'form-control', 'placeholder': 'Brief description of the article', 'rows': '3'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.content, 'Article Content') }}</div>
+        <div class="col">{{ form_widget(form.content,
+            {'attr': {'class': 'form-control', 'placeholder': 'The HTML content of the article', 'rows': '10'}}) }}</div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-2 mt-2 text-right"><label for="article_subcategory">Article Category or Subcategory</label></div>
+        <div class="col mt-2">
+            <select id="article_subcategory" name="article_subcategory" class="form-control" size="6">
+                <option value=""{{ article.categoryId + article.subcategoryId == 0 ? ' selected' }}>(none)</option>
+            {% for category in categories %}
+
+                <optgroup label="{{ category.name }}">
+
+                    <option value="{{ category.id }}"{{ category.id == article.categoryId ? ' selected' }}>
+                        (none subcategory)
+                    </option>
+                {% for subcategory in subcategories %}
+                    {% if (subcategory.category.id == category.id) %}
+
+                    <option value="sub_{{ subcategory.id }}"{{ subcategory.id == article.subcategoryId ? ' selected' }}>
+                        {{ subcategory.subname }}
+                    </option>
+                    {% endif %}
+                {% endfor %}
+
+                </optgroup>
+            {% endfor %}
+
+            </select>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.publicationDate) }}</div>
+        <div class="col-6">{{ form_widget(form.publicationDate,
+            {'attr': {'class': 'form-control'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.active, null, {'label_attr': {'class': 'form-check-label'}}) }}</div>
+        {% if is_checked_default|default('1') %}
+        <div class="col ml-4">{{ form_widget(form.active,
+            {'attr': {'class': 'form-check-input', 'style': 'display: block; width: 25px; height: 25px; cursor: pointer;', 'checked': 'checked'}}) }}</div>
+        {% else %}
+        <div class="col ml-4">{{ form_widget(form.active,
+            {'attr': {'class': 'form-check-input', 'style': 'display: block; width: 25px; height: 25px; cursor: pointer;'}}) }}</div>
+        {% endif %}
+    </div>
+    <div class="row form-group">
+        <div class="col-2 mt-2 text-right">{{ form_label(form.users, 'Article Autors') }}</div>
+        <div class="col mt-2">{{ form_widget(form.users,
+            {'attr': {'class': 'form-control', 'size': '4'}, 'required': false}) }}</div>
+    </div>
+
+    <div class="row justify-content-around">
+        <div class="col-2"></div>
+        <div class="col text-center">
+            <button class="btn btn-danger mr-5 font-weight-bold">{{ button_label|default('Save article') }}</button>
+            <!-- <button type="reset" class="btn btn-danger font-weight-bold" formnovalidate name="cancel">Cancel</button> -->
+            <a class="btn btn-danger font-weight-bold text-white" href="{{ path('app_article_index') }}">Back to list</a>
+        </div>
+    </div>
+</div>
+
+{% do form.category_id.setRendered %}
+{% do form.subcategory_id.setRendered %}
+{{ form_rest(form) }}
+{{ form_end(form) }}

@@ -4,14 +4,36 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: login
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            # если текущий пользователь не имеет прав на какое-то действие, обработаем это исключение
+            access_denied_handler: App\Security\AccessDeniedHandler
+
             lazy: true
-            provider: users_in_memory
+            # provider: users_in_memory
+            provider: app_user_provider
+
+            form_login:
+                # "app_login" - это имя ранее созданного маршрута
+                login_path: app_login
+                check_path: app_login
+                # подключим защиту от CSRF-атак входа
+                enable_csrf: true
+                # на какую страницу перенаправлять после входа
+                default_target_path: app_article_index
+
+            logout:
+                path: app_logout
+                # куда перенаправлять после выхода (по умолчанию - главная страница)
+                target: app_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +44,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/article, roles: ROLE_AUTH_USER }
+        - { path: ^/category, roles: ROLE_AUTH_USER }
+        - { path: ^/subcategory, roles: ROLE_AUTH_USER }
+        - { path: ^/user, roles: ROLE_ADMIN }
+
+    # The ROLE_ADMIN role inherits from the ROLE_USER role
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_AUTH_USER
 
 when@test:
     security:

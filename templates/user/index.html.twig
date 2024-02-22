@@ -1,0 +1,50 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+
+        <h1 class="h2 font-weight-bold text-danger mb-4">Список пользователей</h1>
+
+        {{ include('_message_admin.html.twig') }}
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="table-danger text-white">
+                    <th>id</th>
+                    <th>Login</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for user in users %}
+
+                <tr data-toggle="tooltip" title="Нажмите чтобы редактировать пользователя"
+                        onclick="location='{{ path('app_user_edit', {'id': user.id}) }}'">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role == 'ROLE_AUTH_USER' ? 'auth_user' }}{{ user.role == 'ROLE_ADMIN' ? 'admin' }}</td>
+                    <td>{{ user.active ? 'Yes' : 'No' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <style>
+            tr[title]:hover {
+                cursor: pointer;
+            }
+        </style>
+
+        <p>{{ users|length }} user{{ users|length > 1 ? 's' }} in total.</p>
+        <a href="{{ path('app_user_new') }}">Add a New User</a>
+{% endblock %}

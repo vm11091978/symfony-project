@@ -7,12 +7,10 @@ use App\Repository\CategoryRepository;
 use App\Repository\SubcategoryRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 define("HOMEPAGE_NUM_ARTICLES", 5);
-define("MAX_NUM_ARTICLES", 100000);
 
 class HomepageController extends AbstractController
 {
@@ -66,25 +64,23 @@ class HomepageController extends AbstractController
      */
     #[Route('/archive/category/{id}', name: 'app_category', methods: ['GET'])]
     public function showByCategory(
+        int $id,
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
-        SubcategoryRepository $subcategoryRepository,
-        Request $request
+        SubcategoryRepository $subcategoryRepository
     ): Response
     {
-        $categoryId = $request->attributes->get('id');
-
         // Если URL-ссылка ведёт на страницу с несуществующим Id категории
-        if (! $category = $categoryRepository->findOneById($categoryId)) {
+        if (! $category = $categoryRepository->find($id)) {
             return $this->render('exception/error.html.twig', [
-                'errorMessage' => "Категория с id = $categoryId не найдена"
+                'errorMessage' => "Категория с id = $id не найдена"
             ]);
         }
 
         // Получим массив всех ID подкатегорий для данной категории
-        $subcategoriesId = $subcategoryRepository->findByCategoryGetSubcategoriesId($categoryId);
+        $subcategoriesId = $subcategoryRepository->findByCategoryGetSubcategoriesId($id);
 
-        $articles = $articleRepository->findByActiveJoinAuthors($categoryId, $subcategoriesId);
+        $articles = $articleRepository->findByActiveJoinAuthors($id, $subcategoriesId);
 
         return $this->render('homepage/archive.html.twig', [
             'pageTitle' => $category->getName() . " | Widget News",
@@ -102,20 +98,19 @@ class HomepageController extends AbstractController
      */
     #[Route('/archive/subcategory/{id}', name: 'app_subcategory', methods: ['GET'])]
     public function showBySubcategory(
+        int $id,
         ArticleRepository $articleRepository,
-        SubcategoryRepository $subcategoryRepository,
-        Request $request): Response
+        SubcategoryRepository $subcategoryRepository
+    ): Response
     {
-        $subcategoryId = $request->attributes->get('id');
-
         // Если URL-ссылка ведёт на страницу с несуществующим Id подкатегории
-        if (! $subcategory = $subcategoryRepository->findOneById($subcategoryId)) {
+        if (! $subcategory = $subcategoryRepository->find($id)) {
             return $this->render('exception/error.html.twig', [
-                'errorMessage' => "Подкатегория с id = $subcategoryId не найдена"
+                'errorMessage' => "Подкатегория с id = $id не найдена"
             ]);
         }
 
-        $articles = $articleRepository->findByActiveJoinAuthors(false, $subcategoryId);
+        $articles = $articleRepository->findByActiveJoinAuthors(false, $id);
 
         return $this->render('homepage/archive.html.twig', [
             'pageTitle' => $subcategory->getSubname() . " | Widget News",
@@ -128,29 +123,29 @@ class HomepageController extends AbstractController
     /**
      * Вывод страницы с конкретной статьёй
      */
-    #[Route('/article/{id}', name: 'app_article', methods: ['GET'])]
+    #[Route('/viewarticle/{id}', name: 'app_article', methods: ['GET'])]
     public function viewArticle(
+        int $id,
         ArticleRepository $articleRepository,
         CategoryRepository $categoryRepository,
-        SubcategoryRepository $subcategoryRepository,
-        Request $request
+        SubcategoryRepository $subcategoryRepository
     ): Response
     {
-        $articleId = $request->attributes->get('id');
+        // $articleId = $request->attributes->get('id');
 
         // Если URL-ссылка ведёт на страницу с несуществующим Id статьи
-        if (! $article = $articleRepository->findOneByIdJoinAuthors($articleId)) {
+        if (! $article = $articleRepository->findOneByIdJoinAuthors($id)) {
             return $this->render('exception/error.html.twig', [
-                'errorMessage' => "Статья с id = $articleId не найдена"
+                'errorMessage' => "Статья с id = $id не найдена"
             ]);
         }
 
         // Если статья относится к какой-нибудь категории и/или подкатегории, получим инфу о ней/о них
         if ($categoryId = $article->getCategoryId()) {
-            $category = $categoryRepository->findOneById($categoryId);
+            $category = $categoryRepository->find($categoryId);
         }
         if ($subcategoryId = $article->getSubcategoryId()) {
-            $subcategory = $subcategoryRepository->findOneById($subcategoryId);
+            $subcategory = $subcategoryRepository->find($subcategoryId);
             $category = $subcategory->getCategory();
         }
 

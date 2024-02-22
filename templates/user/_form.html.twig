@@ -1,0 +1,49 @@
+{{ include('_message_admin.html.twig') }}
+
+{{ form_start(form) }}
+<div class="py-5 pr-5 bg-light border border-secondary rounded shadow">
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.login, 'User Login') }}</div>
+        <div class="col">{{ form_widget(form.login,
+            {'attr': {'class': 'form-control', 'placeholder': 'Login of the user'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.password, 'User Password') }}</div>
+        <div class="col">
+        {% if button_label ?? false %}
+            {{ form_widget(form.password,
+                {'attr': {'class': 'form-control', 'placeholder': 'Password of the user'}, 'required': false}) }}
+        {% else %}
+            {{ form_widget(form.password,
+                {'attr': {'class': 'form-control', 'placeholder': 'Password of the user'}}) }}
+        {% endif %}
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.email, 'User E-mail') }}</div>
+        <div class="col">{{ form_widget(form.email,
+            {'attr': {'class': 'form-control', 'placeholder': 'E-mail of the user'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.role, 'User Access role') }}</div>
+        <div class="col">{{ form_widget(form.role,
+            {'attr': {'class': 'form-control'}}) }}</div>
+    </div>
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.active, null, {'label_attr': {'class': 'form-check-label'}}) }}</div>
+        <div class="col ml-4">{{ form_widget(form.active,
+            {'attr': {'class': 'form-check-input', 'style': 'display: block; width: 25px; height: 25px; cursor: pointer;'}}) }}</div>
+    </div>
+
+    <div class="row justify-content-around">
+        <div class="col-2"></div>
+        <div class="col text-center">
+            <button class="btn btn-danger mr-5 font-weight-bold">{{ button_label|default('Save user') }}</button>
+            <!-- <button type="reset" class="btn btn-danger font-weight-bold" formnovalidate name="cancel">Cancel</button> -->
+            <a class="btn btn-danger font-weight-bold text-white" href="{{ path('app_user_index') }}">Back to list</a>
+        </div>
+    </div>
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

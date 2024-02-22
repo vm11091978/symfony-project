@@ -1,0 +1,47 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Category index{% endblock %}
+
+{% block body %}
+
+        <h1 class="h2 font-weight-bold text-danger mb-4">Категории статей</h1>
+
+        {{ include('_message_admin.html.twig') }}
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="table-danger text-white">
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for category in categories %}
+
+                <tr data-toggle="tooltip" title="Нажмите чтобы редактировать категорию"
+                        onclick="location='{{ path('app_category_edit', {'id': category.id}) }}'">
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.description }}</td>
+                    <td><a class="py-3 pr-3" data-toggle="tooltip" title="Посмотреть категорию"
+                           href="{{ path('app_category', {'id': category.id}) }}">show</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <style>
+            tr[title]:hover {
+                cursor: pointer;
+            }
+        </style>
+
+        <p>{{ categories|length }} categor{{ categories|length > 1 ? 'ies' : 'y' }} in total.</p>
+        <a href="{{ path('app_category_new') }}">Add a New Category</a>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% set _route = app.request.get('_route') %}
+
+        <div id="adminHeader" class="pt-2 mt-4 border-top border-info">
+            <h2 class="h5 font-weight-bold text-warning">Widget News Admin</h2>
+            <p class="small mt-1 my-1">You are logged in as <b>{{ app.user.login }}</b> with the rights {{ app.user.role }}.</p>
+        </div>
+
+        <div class="navbar navbar-expand-lg mb-5 border-bottom border-info">
+            <div class="navbar-inner bg-light">
+                <ul class="nav navbar-nav ml-auto">
+                    <!-- <li class="active"><a href="{{ path('app_login') }}">[Вход]</a></li> -->
+                    <li class="nav-item">
+                        <a class="nav-link px-3{% if _route == 'app_article_index' %}
+ disabled" href="javascript:void(0){% else %}" href="{{ path('app_article_index') }}{% endif %}">Show Articles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3{% if _route == 'app_category_index' %}
+ disabled" href="javascript:void(0){% else %}" href="{{ path('app_category_index') }}{% endif %}">Show Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3{% if _route == 'app_subcategory_index' %}
+ disabled" href="javascript:void(0){% else %}" href="{{ path('app_subcategory_index') }}{% endif %}">Show Subcategories</a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3{% if _route == 'app_user_index' %}
+ disabled" href="javascript:void(0){% else %}" href="{{ path('app_user_index') }}{% endif %}">Show Users</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="nav-item"><a class="nav-link px-3" href="{{ path('app_logout') }}">Log Out</a></li>
+                </ul>
+            </div>
+        </div><!--'end_navbar'-->

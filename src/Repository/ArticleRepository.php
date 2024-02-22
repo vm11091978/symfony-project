@@ -6,6 +6,8 @@ use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+define("MAX_NUM_ARTICLES", 100000);
+
 /**
  * @extends ServiceEntityRepository<Article>
  *
@@ -19,6 +21,23 @@ class ArticleRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Article::class);
+    }
+
+    /**
+     * @return Article[] Returns an array of Article objects
+     */
+    public function findAllJoinAuthors(): array
+    {
+		$viewArticles = $this->createQueryBuilder('a')
+		    ->orderBy('a.publicationDate', 'DESC')
+		    ->orderBy('a.id', 'DESC')
+		    ->setMaxResults(MAX_NUM_ARTICLES)
+		    ->getQuery()
+		    ->getResult()
+		;
+		$articles = $this->toArray($viewArticles);
+
+        return $articles;
     }
 
     /**
@@ -58,17 +77,7 @@ class ArticleRepository extends ServiceEntityRepository
             );
         }
 
-        $articles = array();
-        foreach ($viewArticles as $article) {
-            if ($users = $article->getUsers()) {
-                $authors = array();
-                foreach ($users as $user) {
-                    $authors[] = $user->getLogin();
-                }
-                $article->authors = $authors;
-            }
-            $articles[] = $article;
-        }
+        $articles = $this->toArray($viewArticles);
 
         return $articles;
     }
@@ -89,5 +98,22 @@ class ArticleRepository extends ServiceEntityRepository
         }
 
         return $article;
+    }
+    
+    private function toArray($viewArticles): array
+    {
+        $articles = array();
+        foreach ($viewArticles as $article) {
+            if ($users = $article->getUsers()) {
+                $authors = array();
+                foreach ($users as $user) {
+                    $authors[] = $user->getLogin();
+                }
+                $article->authors = $authors;
+            }
+            $articles[] = $article;
+        }
+
+        return $articles;
     }
 }

@@ -1,0 +1,63 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Article index{% endblock %}
+
+{% block body %}
+
+        <h1 class="h2 font-weight-bold text-danger mb-4">Простая CMS на PHP</h1>
+
+        {{ include('_message_admin.html.twig') }}
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="table-danger text-white">
+                    <th>Publication&nbsp;date</th>
+                    <th>Article</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                    <th>Autors</th>
+                    <th>Activity</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for article in articles %}
+
+                <tr data-toggle="tooltip" title="Нажмите чтобы редактировать статью"
+                        onclick="location='{{ path('app_article_edit', {'id': article.id}) }}'">
+                    <td>{{ article.publicationDate ? article.publicationDate|date('j M Y') : '' }}</td>
+                    <td>{{ article.title }}</td>
+                    <td>
+                    {% if article.categoryId ?? false %}
+                        {{ categories[article.categoryId].name }}
+                    {% elseif article.subcategoryId %}
+                        {{ subcategories[article.subcategoryId].category.name }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                    <td>{{ article.subcategoryId ? subcategories[article.subcategoryId].subname : '-' }}</td>
+                    <td>{{ article.authors|join(', ') }}</td>
+                    <td>{{ article.active ? 'Yes' : 'No' }}</td>
+                    <td><a class="py-3 pr-3" data-toggle="tooltip" title="Посмотреть статью"
+                           href="{{ path('app_article', {'id': article.id}) }}">show</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <style>
+            tr[title]:hover {
+                cursor: pointer;
+            }
+        </style>
+
+        <p>{{ articles|length }} article{{ articles|length > 1 ? 's' }} in total.</p>
+        <a href="{{ path('app_article_new') }}">Add a New Article</a>
+{% endblock %}

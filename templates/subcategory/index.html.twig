@@ -1,0 +1,47 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Subcategory index{% endblock %}
+
+{% block body %}
+
+        <h1 class="h2 font-weight-bold text-danger mb-4">Подкатегории статей</h1>
+
+        {{ include('_message_admin.html.twig') }}
+
+        <table class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr class="table-danger text-white">
+                    <th>Subcategory</th>
+                    <th>Contain category</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for subcategory in subcategories %}
+
+                <tr data-toggle="tooltip" title="Нажмите чтобы редактировать подкатегорию"
+                        onclick="location='{{ path('app_subcategory_edit', {'id': subcategory.id}) }}'">
+                    <td>{{ subcategory.subname }}</td>
+                    <td>{{ subcategory.category.name }}</td>
+                    <td><a class="py-3 pr-3" data-toggle="tooltip" title="Посмотреть подкатегорию"
+                           href="{{ path('app_subcategory', {'id': subcategory.id}) }}">show</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">no records found</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <style>
+            tr[title]:hover {
+                cursor: pointer;
+            }
+        </style>
+
+        <p>{{ subcategories|length }} subcategor{{ subcategories|length > 1 ? 'ies' : 'y' }} in total.</p>
+        <a href="{{ path('app_subcategory_new') }}">Add a New Subcategory</a>
+{% endblock %}

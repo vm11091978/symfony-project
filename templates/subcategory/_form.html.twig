@@ -1,0 +1,26 @@
+{{ form_start(form) }}
+<div class="py-5 pr-5 bg-light border border-secondary rounded shadow">
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.subname, 'Subcategory Name') }}</div>
+        <div class="col">{{ form_widget(form.subname,
+            {'attr': {'class': 'form-control', 'placeholder': 'Name of the subcategory'}}) }}</div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-2 text-right">{{ form_label(form.category, 'Contain category') }}</div>
+        <div class="col">{{ form_widget(form.category,
+            {'attr': {'class': 'form-control'}}) }}</div>
+    </div>
+
+    <div class="row justify-content-around">
+        <div class="col-2"></div>
+        <div class="col text-center">
+            <button class="btn btn-danger mr-5 font-weight-bold">{{ button_label|default('Save subcategory') }}</button>
+            <!-- <button type="reset" class="btn btn-danger font-weight-bold" formnovalidate name="cancel">Cancel</button> -->
+            <a class="btn btn-danger font-weight-bold text-white" href="{{ path('app_subcategory_index') }}">Back to list</a>
+        </div>
+    </div>
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}
